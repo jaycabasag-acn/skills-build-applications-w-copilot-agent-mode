@@ -30,20 +30,38 @@ OctoFit Tracker is a three-tier application for a school fitness program. The st
 
 Record your plan here before editing code.
 
-- Presentation tier decision:
-- Logic tier decision:
-- Data tier decision:
-- Activity tracking approach:
-- Team management approach:
-- Leaderboard approach:
-- Workout suggestions approach:
+- Presentation tier decision:Keep the frontend responsible for displaying the UI, collecting user input, navigation, and calling backend APIs. Business logic and direct database access should not be placed in the frontend.
+
+- Logic tier decision: Keep application and business logic in the backend. The backend will validate requests, process application rules, coordinate operations, and expose API endpoints to the frontend.
+
+- Data tier decision: Keep persistent application data in the database and access it only through the backend data-access layer. The frontend will not communicate directly with the database.
+
+- Activity tracking approach: Store user workout and activity records in the database. The backend will provide APIs for creating, retrieving, updating, and deleting activity records, while the frontend will provide the activity tracking interface.
+
+- Team management approach: Store teams and team membership in the database. Team creation, membership changes, and validation will be handled by the backend, with the frontend providing screens for viewing and managing teams.
+
+- Leaderboard approach: Calculate leaderboard rankings in the backend using stored activity data. Expose the calculated rankings through an API endpoint and let the frontend focus on displaying the leaderboard.
+
+- Workout suggestions approach: Keep workout suggestion rules in the backend so recommendation logic is centralized and testable. The frontend will request suggestions from the backend and display the returned workouts.
 
 ## Test plan
 
 Record the commands you run and what each failure means.
 
 - Data-tier command: `npm run test:data --prefix octofit-tracker/backend`
+Result: Failed (4 of 5 tests failed).
+Meaning: The current data models are missing required validation and schema fields for users, teams, activities, and workout suggestions. The seed-data test already passes.
+
 - API command: `npm run test:api --prefix octofit-tracker/backend`
+Result: Failed (4 of 4 tests failed).
+Meaning: Activity and team endpoints are not yet correctly implemented and return 501 instead of validating invalid requests with 400 responses. The leaderboard is not calculating or returning team rankings, and workout suggestions are not yet matching users' activity patterns.
+
 - Frontend command: `npm test --prefix octofit-tracker/frontend`
+Result: Failed (15 of 15 tests failed).
+Meaning: The frontend capability pages are still placeholders. Activities, teams, leaderboard, and workout suggestions do not yet render the expected API data, meaningful empty states, or accessible error alerts.
+
 - Backend build command: `npm run build --prefix octofit-tracker/backend`
+Result: Passed. The backend builds successfully.
+
 - Frontend build command: `npm run build --prefix octofit-tracker/frontend`
+Result: Passed. The frontend builds successfully.
